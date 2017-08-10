@@ -1,4 +1,7 @@
-import { every, each, times, isArray } from 'lodash';
+import each from 'lodash/each';
+import every from 'lodash/every';
+import isArray from 'lodash/isArray';
+import times from 'lodash/times';
 import includeIoMixin from './io-mixin';
 
 export class Array {
