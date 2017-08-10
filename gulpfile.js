@@ -1,8 +1,11 @@
 'use strict';
 
+var babel       = require('gulp-babel');
 var gulp        = require('gulp');
 var plugins     = require('gulp-load-plugins')();
 var runSequence = require('run-sequence');
+var uglify      = require('gulp-uglify');
+var webpackStream = require('webpack-stream');
 
 gulp.task('default', ['build']);
 
@@ -39,35 +42,35 @@ gulp.task('hooks:precommit', ['build'], function() {
 
 gulp.task('build:node', ['lint:src'], function() {
     return gulp.src('src/**/*.js')
-        .pipe(plugins.babel({
-          optional: ["runtime"]
-        }))
+        .pipe(babel())
         .pipe(gulp.dest('lib'));
 });
 
 gulp.task('build:browser', ['lint:src'], function() {
   return gulp.src('src/browser.js')
-    .pipe(plugins.webpack({
+    .pipe(webpackStream({
       output: { library: 'XDR' },
       module: {
-        loaders: [
-          { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader'}
+        rules: [
+          {
+            test: /\.js$/,
+            exclude: /node_modules/,
+            use: {loader: 'babel-loader', options: {presets: ['env']}}
+          }
         ]
-      }
+      },
     }))
     .pipe(plugins.rename('xdr.js'))
     .pipe(gulp.dest('dist'))
-    .pipe(plugins.uglify())
+    .pipe(uglify())
     .pipe(plugins.rename('xdr.min.js'))
     .pipe(gulp.dest('dist'));
 });
 
 gulp.task('test:node', function() {
-  require("babel/register", {
-    ignore: /node_modules/
-  });
   return gulp.src(["test/setup/node.js", "test/unit/**/*.js"])
     .pipe(plugins.mocha({
+      compilers: ['js:babel-register'],
       reporter: ['dot']
     }));
 });

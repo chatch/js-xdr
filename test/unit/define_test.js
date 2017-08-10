@@ -23,8 +23,8 @@ describe('XDR.config', function() {
       });
     });
 
-    expect(this.types.Color).to.be.truthy;
-    expect(this.types.ResultType).to.be.truthy;
+    expect(this.types.Color).to.be.ok;
+    expect(this.types.ResultType).to.be.ok;
   });
 
 
@@ -48,8 +48,8 @@ describe('XDR.config', function() {
       });
     });
 
-    expect(this.types.Result).to.be.truthy;
-    expect(this.types.ResultType).to.be.truthy;
+    expect(this.types.Result).to.be.ok;
+    expect(this.types.ResultType).to.be.ok;
 
     let result = this.types.Result.ok();
     expect(result.switch()).to.eql(this.types.ResultType.ok());
@@ -69,7 +69,7 @@ describe('XDR.config', function() {
       ]);
     });
 
-    expect(this.types.Color).to.be.truthy;
+    expect(this.types.Color).to.be.ok;
 
     let result = new this.types.Color({
       red: 0,
